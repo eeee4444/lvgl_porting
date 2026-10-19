@@ -1,35 +1,35 @@
-| Supported Targets | ESP32-S3 |
-| ----------------- | -------- |
+| 支持的目标芯片 | ESP32-S3 |
+| -------------- | -------- |
 
-| Supported LCD Controller    | ST7701 |
-| ----------------------------| -------|
+| 支持的 LCD 控制器 | ST7701 |
+| ----------------- | ------ |
 
-| Supported Touch Controller  |  GT911 |
-| ----------------------------| -------|
+| 支持的触摸控制器 | GT911 |
+| ---------------- | ----- |
 
-# RGB Avoid Tearing Example
+# RGB 防撕裂示例
 
-[esp_lcd](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/peripherals/lcd.html) provides several panel drivers out-of box, e.g. ST7789, SSD1306, NT35510. However, there're a lot of other panels on the market, it's beyond `esp_lcd` component's responsibility to include them all.
+[esp_lcd](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/peripherals/lcd.html) 开箱即提供了多种面板驱动，例如 ST7789、SSD1306、NT35510。然而市场上还有大量其他面板，把它们全部包含进来已超出 `esp_lcd` 组件的职责范围。
 
-`esp_lcd` allows user to add their own panel drivers in the project scope (i.e. panel driver can live outside of esp-idf), so that the upper layer code like LVGL porting code can be reused without any modifications, as long as user-implemented panel driver follows the interface defined in the `esp_lcd` component.
+`esp_lcd` 允许用户在工程范围内添加自己的面板驱动（即面板驱动可以位于 esp-idf 之外），因此只要用户实现的面板驱动遵循 `esp_lcd` 组件定义的接口，上层代码（例如 LVGL 移植代码）就可以不加修改地复用。
 
-This example demonstrates how to avoid tearing when using LVGL with RGB interface screens in an esp-idf project. The example will use the LVGL library to draw a stylish music player.
+本示例演示在 esp-idf 工程中把 LVGL 与 RGB 接口屏幕配合使用时如何防撕裂。示例会在开机后使用 LVGL 库绘制一个居中的 Hello LVGL 标签，并附上 ESP32-S3 LVGL Port 副标题的极简界面，用于肉眼确认屏幕与刷新链路工作正常。
 
-This example uses the [esp_timer](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/esp_timer.html) to generate the ticks needed by LVGL and uses a dedicated task to run the `lv_timer_handler()`. Since the LVGL APIs are not thread-safe, this example uses a mutex which be invoked before the call of `lv_timer_handler()` and released after it. The same mutex needs to be used in other tasks and threads around every LVGL (lv_...) related function call and code. For more porting guides, please refer to [LVGL porting doc](https://docs.lvgl.io/master/porting/index.html).
+本示例使用 [esp_timer](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-reference/system/esp_timer.html) 产生 LVGL 所需的时钟节拍，并使用一个专用任务运行 `lv_timer_handler()`。由于 LVGL 的 API 不是线程安全的，本示例使用一个互斥量，在调用 `lv_timer_handler()` 之前获取、调用之后释放。在其他任务和线程中，围绕每一处 LVGL（lv_...）相关的函数调用与代码，都需要使用同一个互斥量。更多移植指南请参考 [LVGL porting doc](https://docs.lvgl.io/master/porting/index.html)。
 
-## How to use the example
+## 如何使用本示例
 
-## ESP-IDF Required
+## ESP-IDF 版本要求
 
-### Hardware Required
+### 所需硬件
 
-* An ESP32-S3R8 development board
-* A ST7701 LCD panel, with RGB interface
-* An USB cable for power supply and programming
+* 一块 ESP32-S3R8 开发板
+* 一块 ST7701 LCD 面板，带 RGB 接口
+* 一根 USB 数据线，用于供电与烧写程序
 
-### Hardware Connection
+### 硬件连接
 
-The connection between ESP Board and the LCD is as follows:
+ESP 开发板与 LCD 之间的连接如下：
 
 ```
        ESP Board                           RGB  Panel
@@ -55,39 +55,39 @@ The connection between ESP Board and the LCD is as follows:
                                        +-------------------+
 ```
 
-* The LCD parameters and GPIO number used by this example can be changed in [example_rgb_avoid_tearing.c](main/example_rgb_avoid_tearing.c). Especially, please pay attention to the **vendor specific initialization**, it can be different between manufacturers and should consult the LCD supplier for initialization sequence code.
-* The LVGL parameters can be changed not only through `menuconfig` but also directly in `lvgl_conf.h`
+* 本示例使用的 LCD 参数与 GPIO 编号可以在 [waveshare_rgb_lcd_port.c](main/waveshare_rgb_lcd_port.c) 中修改。请特别注意**厂商特定的初始化序列**，它在不同厂商之间可能不同，应向 LCD 供应商索取初始化序列代码。
+* LVGL 参数不仅可以通过 `menuconfig` 修改，也可以直接修改 `main/lvgl_port.h` 中的 LVGL 参数宏。
 
-### Configure the Project
+### 配置工程
 
-Run `idf.py menuconfig` and navigate to `Example Configuration` menu.
+运行 `idf.py menuconfig`，进入 `示例配置` 菜单。
 
-### Build and Flash
+### 编译与烧写
 
-Run `idf.py set-target esp32s3` to select the target chip.
+运行 `idf.py set-target esp32s3` 选择目标芯片。
 
-Run `idf.py -p PORT build flash monitor` to build, flash and monitor the project. A fancy animation will show up on the LCD as expected.
+运行 `idf.py -p PORT build flash monitor` 完成编译、烧写并监视日志。LCD 上会如期显示出居中的 Hello LVGL 标签与 ESP32-S3 LVGL Port 副标题。
 
-The first time you run `idf.py` for the example will cost extra time as the build system needs to address the component dependencies and downloads the missing components from registry into `managed_components` folder.
+第一次为本示例运行 `idf.py` 时会额外耗时，因为构建系统需要解析组件依赖，并把缺失的组件从组件仓库下载到 `managed_components` 文件夹。
 
-(To exit the serial monitor, type ``Ctrl-]``.)
+（要退出串口监视器，请按 ``Ctrl-]``。）
 
-See the [Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/index.html) for full steps to configure and use ESP-IDF to build projects.
+完整的工程配置步骤以及使用 ESP-IDF 构建工程的方法请参见 [入门指南](https://docs.espressif.com/projects/esp-idf/en/latest/get-started/index.html)。
 
-## Troubleshooting
+## 故障排查
 
-For any technical queries, please open an [issue](https://github.com/espressif/esp-iot-solution/issues) on GitHub. We will get back to you soon.
+如有任何技术问题，请在 GitHub 上提交 [issue](https://github.com/espressif/esp-iot-solution/issues)，我们会尽快回复。
 
 ---
 
-## Getting Started (clone & build)
+## 快速开始（克隆与编译）
 
-**Prerequisites**
+**前置条件**
 
-* [ESP-IDF **v5.4.1**](https://docs.espressif.com/projects/esp-idf/en/v5.4.1/esp32s3/get-started/) (the version this project was verified against)
-* ESP32-S3 development board with a 7-inch RGB LCD panel (ST7701) and GT911 capacitive touch
+* [ESP-IDF **v5.4.1**](https://docs.espressif.com/projects/esp-idf/en/v5.4.1/esp32s3/get-started/)（本工程验证所用的版本）
+* 搭载 7 英寸 RGB LCD 面板（ST7701）与 GT911 电容触摸的 ESP32-S3 开发板
 
-**Hardware assumed by this project:** ESP32-S3R8, ST7701 RGB LCD, GT911 touch panel over I2C.
+**本工程假设的硬件：** ESP32-S3R8、ST7701 RGB LCD、经 I2C 连接的 GT911 触摸面板。
 
 ```bash
 git clone https://github.com/eeee4444/lvgl_porting.git
@@ -99,8 +99,8 @@ idf.py set-target esp32s3
 idf.py -p PORT build flash monitor
 ```
 
-**Notes**
+**说明**
 
-* All third-party components (LVGL 8.4.0, esp_lcd_touch, esp_lcd_touch_gt911) are **vendored under `components/`**, so no component download is required and the build works offline.
-* `dependencies.lock` is intentionally **not** tracked: it is generated by the IDF component manager and would otherwise carry machine-specific absolute paths that break configure on other machines. It is recreated automatically on the first build.
-* If you change a component or `main/idf_component.yml`, delete `dependencies.lock` and let it regenerate.
+* 所有第三方组件（LVGL 8.4.0、esp_lcd_touch、esp_lcd_touch_gt911）都以源码形式内置（vendored）在 `components/` 下，因此无需下载组件，构建可以离线完成。
+* `dependencies.lock` 是**有意不纳入版本跟踪**的：它由 IDF 组件管理器生成，否则会带有与本机相关的绝对路径，导致在其他机器上配置失败。首次构建时它会自动重新生成。
+* 如果你改动了某个组件或 `main/idf_component.yml`，请删除 `dependencies.lock`，让它重新生成。

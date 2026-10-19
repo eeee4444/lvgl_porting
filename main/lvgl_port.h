@@ -18,7 +18,7 @@ extern "C" {
 #endif
 
 /**
- * LVGL related parameters, can be adjusted by users
+ * LVGL 相关参数，可由用户调整
  *
  */
 #define LVGL_PORT_H_RES             (800)
@@ -26,24 +26,24 @@ extern "C" {
 #define LVGL_PORT_TICK_PERIOD_MS    (CONFIG_EXAMPLE_LVGL_PORT_TICK)
 
 /**
- * LVGL timer handle task related parameters, can be adjusted by users
+ * LVGL 定时器处理任务相关参数，可由用户调整
  *
  */
-#define LVGL_PORT_TASK_MAX_DELAY_MS (CONFIG_EXAMPLE_LVGL_PORT_TASK_MAX_DELAY_MS)    // The maximum delay of the LVGL timer task, in milliseconds
-#define LVGL_PORT_TASK_MIN_DELAY_MS (CONFIG_EXAMPLE_LVGL_PORT_TASK_MIN_DELAY_MS)    // The minimum delay of the LVGL timer task, in milliseconds
-#define LVGL_PORT_TASK_STACK_SIZE   (CONFIG_EXAMPLE_LVGL_PORT_TASK_STACK_SIZE_KB * 1024) // The stack size of the LVGL timer task, in bytes
-#define LVGL_PORT_TASK_PRIORITY     (CONFIG_EXAMPLE_LVGL_PORT_TASK_PRIORITY)        // The priority of the LVGL timer task
-#define LVGL_PORT_TASK_CORE         (CONFIG_EXAMPLE_LVGL_PORT_TASK_CORE)            // The core of the LVGL timer task,
-// `-1` means the don't specify the core
+#define LVGL_PORT_TASK_MAX_DELAY_MS (CONFIG_EXAMPLE_LVGL_PORT_TASK_MAX_DELAY_MS)    // LVGL 定时器任务的最大延时，单位毫秒
+#define LVGL_PORT_TASK_MIN_DELAY_MS (CONFIG_EXAMPLE_LVGL_PORT_TASK_MIN_DELAY_MS)    // LVGL 定时器任务的最小延时，单位毫秒
+#define LVGL_PORT_TASK_STACK_SIZE   (CONFIG_EXAMPLE_LVGL_PORT_TASK_STACK_SIZE_KB * 1024) // LVGL 定时器任务的栈大小，单位字节
+#define LVGL_PORT_TASK_PRIORITY     (CONFIG_EXAMPLE_LVGL_PORT_TASK_PRIORITY)        // LVGL 定时器任务的优先级
+#define LVGL_PORT_TASK_CORE         (CONFIG_EXAMPLE_LVGL_PORT_TASK_CORE)            // LVGL 定时器任务所在的核，
+// `-1` 表示不指定核
 /**
  *
- * LVGL buffer related parameters, can be adjusted by users:
- *  (These parameters will be useless if the avoid tearing function is enabled)
+ * LVGL 缓冲相关参数，可由用户调整：
+ *  （使能防撕裂功能时，这些参数将不再生效）
  *
- *  - Memory type for buffer allocation:
- *      - MALLOC_CAP_SPIRAM: Allocate LVGL buffer in PSRAM
- *      - MALLOC_CAP_INTERNAL: Allocate LVGL buffer in SRAM
- *      (The SRAM is faster than PSRAM, but the PSRAM has a larger capacity)
+ *  - 缓冲分配的内存类型：
+ *      - MALLOC_CAP_SPIRAM: 在 PSRAM 中分配 LVGL 缓冲
+ *      - MALLOC_CAP_INTERNAL: 在 SRAM 中分配 LVGL 缓冲
+ *      （SRAM 比 PSRAM 更快，但 PSRAM 容量更大）
  *
  */
 #if CONFIG_EXAMPLE_LVGL_PORT_BUF_PSRAM
@@ -54,33 +54,33 @@ extern "C" {
 #define LVGL_PORT_BUFFER_HEIGHT         (CONFIG_EXAMPLE_LVGL_PORT_BUF_HEIGHT)
 
 /**
- * Avoid tering related configurations, can be adjusted by users.
+ * 防撕裂相关配置，可由用户调整。
  *
  */
-#define LVGL_PORT_AVOID_TEAR_ENABLE     (CONFIG_EXAMPLE_LVGL_PORT_AVOID_TEAR_ENABLE) // Set to 1 to enable
+#define LVGL_PORT_AVOID_TEAR_ENABLE     (CONFIG_EXAMPLE_LVGL_PORT_AVOID_TEAR_ENABLE) // 设为 1 以启用
 #if LVGL_PORT_AVOID_TEAR_ENABLE
 /**
- * Set the avoid tearing mode:
- *      - 0: Disable avoid tearing function
- *      - 1: LCD double-buffer & LVGL full-refresh
- *      - 2: LCD triple-buffer & LVGL full-refresh
- *      - 3: LCD double-buffer & LVGL direct-mode (recommended)
+ * 设置防撕裂模式：
+ *      - 0：关闭防撕裂功能
+ *      - 1：LCD 双缓冲 & LVGL 全屏刷新
+ *      - 2：LCD 三缓冲 & LVGL 全屏刷新
+ *      - 3：LCD 双缓冲 & LVGL 直接模式（推荐）
  *
  */
 #define LVGL_PORT_AVOID_TEAR_MODE       (CONFIG_EXAMPLE_LVGL_PORT_AVOID_TEAR_MODE)
 
 /**
- * Set the rotation degree of the LCD panel when the avoid tearing function is enabled:
- *      - 0: 0 degree
- *      - 90: 90 degree
- *      - 180: 180 degree
- *      - 270: 270 degree
+ * 使能防撕裂功能时设置 LCD 面板的旋转角度：
+ *      - 0：0 度
+ *      - 90：90 度
+ *      - 180：180 度
+ *      - 270：270 度
  *
  */
 #define EXAMPLE_LVGL_PORT_ROTATION_DEGREE  (CONFIG_EXAMPLE_LVGL_PORT_ROTATION_DEGREE)
 
 /**
- * Below configurations are automatically set according to the above configurations, users do not need to modify them.
+ * 以下配置根据上述配置自动设置，用户无需修改。
  *
  */
 #if LVGL_PORT_AVOID_TEAR_MODE == 1
@@ -116,41 +116,41 @@ extern "C" {
 #endif /* LVGL_PORT_AVOID_TEAR_ENABLE */
 
 /**
- * @brief Initialize LVGL port
+ * @brief 初始化 LVGL 移植层
  *
- * @param[in] lcd_handle: LCD panel handle
- * @param[in] tp_handle: Touch panel handle
+ * @param[in] lcd_handle: LCD 面板句柄
+ * @param[in] tp_handle: 触摸面板句柄
  *
  * @return
- *      - ESP_OK: Success
- *      - ESP_ERR_INVALID_ARG: Invalid argument
- *      - Others: Fail
+ *      - ESP_OK: 成功
+ *      - ESP_ERR_INVALID_ARG: 无效参数
+ *      - 其它: 失败
  */
 esp_err_t lvgl_port_init(esp_lcd_panel_handle_t lcd_handle, esp_lcd_touch_handle_t tp_handle);
 
 /**
- * @brief Take LVGL mutex
+ * @brief 获取 LVGL 互斥量
  *
- * @param[in] timeout_ms: Timeout in [ms]. 0 will block indefinitely.
+ * @param[in] timeout_ms: 超时时间 [ms]。0 表示无限阻塞。
  *
  * @return
- *      - true:  Mutex was taken
- *      - false: Mutex was NOT taken
+ *      - true:  已获取到互斥量
+ *      - false: 未获取到互斥量
  */
 bool lvgl_port_lock(int timeout_ms);
 
 /**
- * @brief Give LVGL mutex
+ * @brief 释放 LVGL 互斥量
  *
  */
 void lvgl_port_unlock(void);
 
 /**
- * @brief Notifies the LVGL task when the transmission of the RGB frame buffer is completed.
+ * @brief 当 RGB 帧缓冲传输完成时通知 LVGL 任务。
  *
  * @return
- *      - true:  The tasks need to be re-scheduled
- *      - false: The tasks don't need to be re-scheduled
+ *      - true:  任务需要被重新调度
+ *      - false: 任务不需要被重新调度
  */
 bool lvgl_port_notify_rgb_vsync(void);
 

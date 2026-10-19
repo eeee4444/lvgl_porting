@@ -1,72 +1,72 @@
-menu "Example Configuration"
+menu "示例配置"
 
-    menu "Display"
+    menu "显示"
         config EXAMPLE_LCD_RGB_BOUNCE_BUFFER_HEIGHT
-            int "RGB Bounce buffer height"
+            int "RGB 弹跳缓冲高度"
             default 10
             help
-                Height of bounce buffer. The width of the buffer is the same as that of the LCD.
+                弹跳缓冲的高度。缓冲区的宽度与 LCD 的宽度相同。
 
         config EXAMPLE_LVGL_PORT_TASK_MAX_DELAY_MS
-            int "LVGL timer task maximum delay (ms)"
+            int "LVGL 定时器任务最大延时 (ms)"
             default 500
-            range 2 2000  # Example range, adjust as needed
+            range 2 2000  # 示例范围，可按需调整
             help
-            The maximum delay of the LVGL timer task, in milliseconds.
+            LVGL 定时器任务的最大延时，单位为毫秒。
 
         config EXAMPLE_LVGL_PORT_TASK_MIN_DELAY_MS
-            int "LVGL timer task minimum delay (ms)"
+            int "LVGL 定时器任务最小延时 (ms)"
             default 10
-            range 1 100  # Example range, adjust as needed
+            range 1 100  # 示例范围，可按需调整
             help
-            The minimum delay of the LVGL timer task, in milliseconds.
+            LVGL 定时器任务的最小延时，单位为毫秒。
 
         config EXAMPLE_LVGL_PORT_TASK_PRIORITY
-            int "LVGL task priority"
+            int "LVGL 任务优先级"
             default 2
             help
-                The Board Support Package will create a task that will periodically handle LVGL operation in lv_timer_handler().
+                板级支持包会创建一个任务，在 lv_timer_handler() 中周期性地处理 LVGL 操作。
 
         config EXAMPLE_LVGL_PORT_TASK_STACK_SIZE_KB
-            int "LVGL task stack size (KB)"
+            int "LVGL 任务栈大小 (KB)"
             default 6
             help
-                Size(KB) of LVGL task stack.
+                LVGL 任务栈的大小（KB）。
 
         config EXAMPLE_LVGL_PORT_TASK_CORE
-            int "LVGL timer task core"
+            int "LVGL 定时器任务所在核心"
             default -1
             range -1 1
             help
-            The core of the LVGL timer task.
-            Set to -1 to not specify the core.
-            Set to 1 only if the SoCs support dual-core, otherwise set to -1 or 0.
+            LVGL 定时器任务所使用的核心。
+            设为 -1 表示不指定核心。
+            仅当 SoC 支持双核时才设为 1，否则请设为 -1 或 0。
 
         config EXAMPLE_LVGL_PORT_TICK
-            int "LVGL tick period"
+            int "LVGL 时钟节拍周期"
             default 2
             range 1 100
             help
-                Period of LVGL tick timer.
+                LVGL 时钟节拍定时器的周期。
 
         config EXAMPLE_LVGL_PORT_AVOID_TEAR_ENABLE
-            bool "Avoid tearing effect"
+            bool "启用防撕裂"
             default "n"
             help
-                Avoid tearing effect through LVGL buffer mode and double frame buffers of RGB LCD. This feature is only available for RGB LCD.
+                通过 LVGL 缓冲模式与 RGB LCD 的双帧缓冲来实现防撕裂。该功能仅适用于 RGB LCD。
 
         choice
             depends on EXAMPLE_LVGL_PORT_AVOID_TEAR_ENABLE
-            prompt "Select Avoid Tearing Mode"
+            prompt "选择防撕裂模式"
             default EXAMPLE_LVGL_PORT_AVOID_TEAR_MODE_3
             config EXAMPLE_LVGL_PORT_AVOID_TEAR_MODE_1
-                bool "Mode1: LCD double-buffer & LVGL full-refresh"
+                bool "Mode1：LCD 双缓冲 & LVGL 全屏刷新"
             config EXAMPLE_LVGL_PORT_AVOID_TEAR_MODE_2
-                bool "Mode2: LCD triple-buffer & LVGL full-refresh"
+                bool "Mode2：LCD 三缓冲 & LVGL 全屏刷新"
             config EXAMPLE_LVGL_PORT_AVOID_TEAR_MODE_3
-                bool "Mode3: LCD double-buffer & LVGL direct-mode"
+                bool "Mode3：LCD 双缓冲 & LVGL 直接模式"
             help
-                The current tearing prevention mode supports both full refresh mode and direct mode. Tearing prevention mode may consume more PSRAM space
+                当前的防撕裂模式同时支持全屏刷新模式与直接模式。防撕裂模式可能会占用更多 PSRAM 空间
         endchoice
 
         config EXAMPLE_LVGL_PORT_AVOID_TEAR_MODE
@@ -78,16 +78,16 @@ menu "Example Configuration"
 
         choice
             depends on EXAMPLE_LVGL_PORT_AVOID_TEAR_ENABLE
-            prompt "Select rotation"
+            prompt "选择旋转角度"
             default EXAMPLE_LVGL_PORT_ROTATION_0
             config EXAMPLE_LVGL_PORT_ROTATION_0
-                bool "Rotation 0"
+                bool "旋转 0°"
             config EXAMPLE_LVGL_PORT_ROTATION_90
-                bool "Rotation 90"
+                bool "旋转 90°"
             config EXAMPLE_LVGL_PORT_ROTATION_180
-                bool "Rotation 180"
+                bool "旋转 180°"
             config EXAMPLE_LVGL_PORT_ROTATION_270
-                bool "Rotation 270"
+                bool "旋转 270°"
         endchoice
 
         config EXAMPLE_LVGL_PORT_ROTATION_DEGREE
@@ -99,19 +99,19 @@ menu "Example Configuration"
 
         choice
             depends on !EXAMPLE_LVGL_PORT_AVOID_TEAR_ENABLE
-            prompt "Select LVGL buffer memory capability"
+            prompt "选择 LVGL 缓冲区的内存类型"
             default EXAMPLE_LVGL_PORT_BUF_INTERNAL
             config EXAMPLE_LVGL_PORT_BUF_PSRAM
-                bool "PSRAM memory"
+                bool "PSRAM 内存"
             config EXAMPLE_LVGL_PORT_BUF_INTERNAL
-                bool "Internal memory"
+                bool "内部内存"
         endchoice
 
         config EXAMPLE_LVGL_PORT_BUF_HEIGHT
             depends on !EXAMPLE_LVGL_PORT_AVOID_TEAR_ENABLE
-            int "LVGL buffer height"
+            int "LVGL 缓冲高度"
             default 100
             help
-                Height of LVGL buffer. The width of the buffer is the same as that of the LCD.
+                LVGL 缓冲的高度。缓冲区的宽度与 LCD 的宽度相同。
     endmenu
 endmenu

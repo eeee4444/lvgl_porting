@@ -1,7 +1,7 @@
-# For more information about build system see
+# 有关构建系统的更多信息，请参见
 # https://docs.espressif.com/projects/esp-idf/en/latest/api-guides/build-system.html
-# The following five lines of boilerplate have to be in your project's
-# CMakeLists in this exact order for cmake to work correctly
+# 以下几行样板代码必须位于工程的
+# CMakeLists 中，并且保持这个精确顺序，cmake 才能正常工作
 cmake_minimum_required(VERSION 3.5)
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 add_compile_options("-Wno-attributes")
