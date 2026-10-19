@@ -1,0 +1,14 @@
+# ESP-IDF build output
+/build/
+/managed_components/
+
+# IDF local config backup (regenerated automatically)
+sdkconfig.old
+
+# Machine-specific editor settings (absolute paths of one machine)
+/.vscode/settings.json
+
+# OS junk
+.DS_Store
+Thumbs.db
+desktop.ini
