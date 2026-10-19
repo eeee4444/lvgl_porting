@@ -8,6 +8,9 @@ sdkconfig.old
 # Machine-specific editor settings (absolute paths of one machine)
 /.vscode/settings.json
 
+# IDF component manager lock (generated, contains machine-specific absolute paths)
+dependencies.lock
+
 # OS junk
 .DS_Store
 Thumbs.db
